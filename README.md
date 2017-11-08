@@ -4,14 +4,23 @@ Clone for: https://github.com/ckan/ckanext-dcat.git#egg=ckanext-dcat
 
 1.  Install ckanext-harvest ([https://github.com/ckan/ckanext-harvest#installation](https://github.com/ckan/ckanext-harvest#installation)) (Only if you want to use the RDF harvester)
 
-2.  Install the extension on your virtualenv:
+2. . /<CKAN_HOME>/bin/activate
 
-        (pyenv) $ pip install -e git+https://github.com/dFigue/ckanext-iaest.git#egg=ckanext-iaest
+3. cd <CKAN_HOME>/src
 
-3.  Install the extension requirements:
+3.  Install the extension on your virtualenv:
 
-        (pyenv) $ pip install -r ckanext-dcat/requirements.txt
+        (pyenv) $ pip install -e git+https://github.com/aragonopendata/ckanext-iaest.git#egg=ckanext-iaest
 
-4.  Enable the required plugins in your ini file:
+4.  Install the extension requirements:
 
-        ckan.plugins = dcat dcat_rdf_harvester dcat_json_harvester dcat_json_interface
+        (pyenv) $ pip install -r ckanext-iaest/requirements.txt
+
+5.  Enable the required plugins in your ini file:
+
+        ckan.plugins = iaest iaest_rdf_harvester
+
+6. Enable Profile
+	ckanext.dcat.rdf.profiles = euro_dcat_ap euro_dcat_ap_iaest 
+
+7. Create user with username harvest
