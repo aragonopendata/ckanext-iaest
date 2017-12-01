@@ -1,5 +1,8 @@
 import json
 import logging
+import os
+import datetime
+
 
 from ckan.plugins import toolkit
 
@@ -12,11 +15,7 @@ from ckan.controllers.home import HomeController
 
 from ckanext.iaest.utils import CONTENT_TYPES, parse_accept_header
 
-from genshi.template import MarkupTemplate
-from genshi.template.text import NewTextTemplate
-
-import ckan.lib.base as base
-render = base.render
+from genshi.template import TemplateLoader
 
 
 log = logging.getLogger(__name__)
@@ -95,6 +94,8 @@ class DCATController(BaseController):
 
     def federador(self):
         
+       
+
         log.debug('Leyendo catalog')
         data_dict = {
             'page': toolkit.request.params.get('page'),
@@ -107,12 +108,25 @@ class DCATController(BaseController):
             log.debug('Obteniendo datasets para el federador')
             dataset_dict = toolkit.get_action('iaest_federador')({}, data_dict)
             log.debug('Creando extra_vars')
-            c = {'c':{'pkg':dataset_dict}}
-            log.debug('Creando c %s', c)
+            c_data = {'pkg':dataset_dict,'fecha':datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}
+            #log.debug('Creando c %s', c_data)
             
             toolkit.response.headers['Content-Type'] = 'application/rdf+xml;charset=UTF-8'
-            loader_render = NewTextTemplate("application/rdf+xml; charset=utf-8", True, 'rdf') 
-            return render('package/federador.rdf', extra_vars=c,loader=loader_render)
+
+            #Renderizamos la pagina
+
+            loader = TemplateLoader(
+                os.path.join(os.path.dirname(__file__), 'templates'),
+                auto_reload=True
+            )
+
+            tmpl = loader.load('package/federador.rdf')
+            content = tmpl.generate(c=c_data).render('xml')
+            log.debug('Content Federador: %s', content)
+            toolkit.response.headers['Content-Type'] = 'application/rdf+xml;charset=UTF-8'
+            toolkit.response.headers['Content-Length'] = len(content)
+            return content
+
 
 
         except toolkit.ValidationError, e:
