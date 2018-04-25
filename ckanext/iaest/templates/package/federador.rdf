@@ -132,7 +132,7 @@
 		  </dct:Frequency>
 		</dct:accrualPeriodicity>
       </py:when>
-<py:when test="extra_dict.get('value') == 'Instantánea'">
+	  <py:when test="extra_dict.get('value') == 'Instantánea'">
 		<dct:accrualPeriodicity>
 		  <dct:Frequency>
 			<rdf:value>
@@ -161,33 +161,201 @@
 		<dct:spatial rdf:resource="http://datos.gob.es/recurso/sector-publico/territorio/Autonomia/Aragon" />
 
 	   <py:for each="rsc_dict in item.get('resources')">
-	  <py:choose>
+	   	<py:choose>
 		  <py:when test="'/recurso/territorio/' in rsc_dict['url']">
 			<dcat:distribution>
 			  <dcat:Distribution>
-				   <dct:identifier>${item.get('url')}</dct:identifier>
+				   <dct:identifier>${rsc_dict.get('url')}</dct:identifier>
 				<py:if test="rsc_dict.get('name')">
 				   <dct:title xml:lang="es">Datos disponibles en AragoDBPedia de ${rsc_dict.get('name')} en formato HTML</dct:title>
 				</py:if>
-				<dcat:accessURL  rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">${item.get('url')}</dcat:accessURL>
-				<dct:format><dct:IMT rdf:value="${rsc_dict.get('mimetype_inner')}" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>${rsc_dict.get('mimetype_inner')}</dcat:mediaType>
-				</dcat:Distribution>
+				<dcat:accessURL  rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">${rsc_dict.get('url')}</dcat:accessURL>
+				<py:choose>
+					<py:when test="rsc_dict.get('format').lower() == 'px'">
+						<dct:format><dct:IMT rdf:value="text/pc-axis" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>text/pc-axis</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'xls'">
+						<dct:format><dct:IMT rdf:value="application/vnd.ms-excel" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/vnd.ms-excel</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'xml'">
+						<dct:format><dct:IMT rdf:value="application/xml" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/xml</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'json'">
+						<dct:format><dct:IMT rdf:value="application/json" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/json</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'csv'">
+						<dct:format><dct:IMT rdf:value="text/csv" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>text/csv</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'html'">
+						<dct:format><dct:IMT rdf:value="text/html" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>text/html</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'shp'">
+						<dct:format><dct:IMT rdf:value="application/x-zipped-shp" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/x-zipped-shp</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'dxf'">
+						<dct:format><dct:IMT rdf:value="application/dxf" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/dxf</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'jpeg'">
+						<dct:format><dct:IMT rdf:value="image/jpeg" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>image/jpeg</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'jpg'">
+						<dct:format><dct:IMT rdf:value="image/jpeg" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>image/jpeg</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'gml'">
+						<dct:format><dct:IMT rdf:value="application/gml+xml" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/gml+xml</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'url'">
+						<dct:format><dct:IMT rdf:value="text/html" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>text/html</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'zip'">
+						<dct:format><dct:IMT rdf:value="application/zip" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/zip</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'ics'">
+						<dct:format><dct:IMT rdf:value="text/calendar" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>text/calendar</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'ods'">
+						<dct:format><dct:IMT rdf:value="application/vnd.oasis.opendocument.spreadsheet" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/vnd.oasis.opendocument.spreadsheet</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'elp'">
+						<dct:format><dct:IMT rdf:value="application/elp" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/elp</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'txt'">
+						<dct:format><dct:IMT rdf:value="text/plain" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>text/plain</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'kmz'">
+						<dct:format><dct:IMT rdf:value="application/vnd.google-earth.kmz" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/vnd.google-earth.kmz</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'rss'">
+						<dct:format><dct:IMT rdf:value="application/rss+xml" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/rss+xml</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'geojson'">
+						<dct:format><dct:IMT rdf:value="application/json" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/json</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'dgn'">
+						<dct:format><dct:IMT rdf:value="image/vnd.dgn" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>image/vnd.dgn</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'scorm'">
+						<dct:format><dct:IMT rdf:value="application/scorm" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/scorm</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'dwg'">
+						<dct:format><dct:IMT rdf:value="image/vnd.dwg" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>image/vnd.dwg</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'png'">
+						<dct:format><dct:IMT rdf:value="image/png" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>image/png</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'xlsx'">
+						<dct:format><dct:IMT rdf:value="application/vnd.ms-excel" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/vnd.ms-excel</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'api'">
+						<dct:format><dct:IMT rdf:value="application/json" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/json</dcat:mediaType>
+					</py:when>
+					<py:when test="rsc_dict.get('format').lower() == 'ttl'">
+						<dct:format><dct:IMT rdf:value="text/turtle" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>text/turtle</dcat:mediaType>
+					</py:when>
+					<py:otherwise>
+						<dct:format><dct:IMT rdf:value="application/octet-stream" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/octet-stream</dcat:mediaType>
+					</py:otherwise>
+				</py:choose>
+			  </dcat:Distribution>
 			</dcat:distribution>
 		   </py:when>
 
 		   <py:otherwise>
 			<dcat:distribution>
 			  <dcat:Distribution>
-				   <dct:identifier>${item.get('url')}</dct:identifier>
-				   <dcat:accessURL  rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">${item.get('url')}</dcat:accessURL>
+				   <dct:identifier>${rsc_dict.get('url')}</dct:identifier>
+				   <dcat:accessURL  rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">${rsc_dict.get('url')}</dcat:accessURL>
 
 					<py:if test="rsc_dict.get('name')">
 				   		<dct:title xml:lang="es">${rsc_dict.get('name')}</dct:title>
 					</py:if>
 
-					<py:if test="rsc_dict.get('format')">
-	      				<dct:format><dct:IMT rdf:value="${rsc_dict.get('mimetype_inner')}" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>${rsc_dict.get('mimetype_inner')}</dcat:mediaType>
-					</py:if>
+					<py:choose>
+						<py:when test="rsc_dict.get('format').lower() == 'px'">
+							<dct:format><dct:IMT rdf:value="text/pc-axis" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>text/pc-axis</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'xls'">
+							<dct:format><dct:IMT rdf:value="application/vnd.ms-excel" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/vnd.ms-excel</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'xml'">
+							<dct:format><dct:IMT rdf:value="application/xml" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/xml</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'json'">
+							<dct:format><dct:IMT rdf:value="application/json" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/json</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'csv'">
+							<dct:format><dct:IMT rdf:value="text/csv" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>text/csv</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'html'">
+							<dct:format><dct:IMT rdf:value="text/html" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>text/html</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'shp'">
+							<dct:format><dct:IMT rdf:value="application/x-zipped-shp" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/x-zipped-shp</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'dxf'">
+							<dct:format><dct:IMT rdf:value="application/dxf" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/dxf</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'jpeg'">
+							<dct:format><dct:IMT rdf:value="image/jpeg" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>image/jpeg</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'jpg'">
+							<dct:format><dct:IMT rdf:value="image/jpeg" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>image/jpeg</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'gml'">
+							<dct:format><dct:IMT rdf:value="application/gml+xml" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/gml+xml</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'url'">
+							<dct:format><dct:IMT rdf:value="text/html" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>text/html</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'zip'">
+							<dct:format><dct:IMT rdf:value="application/zip" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/zip</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'ics'">
+							<dct:format><dct:IMT rdf:value="text/calendar" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>text/calendar</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'ods'">
+							<dct:format><dct:IMT rdf:value="application/vnd.oasis.opendocument.spreadsheet" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/vnd.oasis.opendocument.spreadsheet</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'elp'">
+							<dct:format><dct:IMT rdf:value="application/elp" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/elp</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'txt'">
+							<dct:format><dct:IMT rdf:value="text/plain" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>text/plain</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'kmz'">
+							<dct:format><dct:IMT rdf:value="application/vnd.google-earth.kmz" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/vnd.google-earth.kmz</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'rss'">
+							<dct:format><dct:IMT rdf:value="application/rss+xml" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/rss+xml</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'geojson'">
+							<dct:format><dct:IMT rdf:value="application/json" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/json</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'dgn'">
+							<dct:format><dct:IMT rdf:value="image/vnd.dgn" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>image/vnd.dgn</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'scorm'">
+							<dct:format><dct:IMT rdf:value="application/scorm" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/scorm</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'dwg'">
+							<dct:format><dct:IMT rdf:value="image/vnd.dwg" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>image/vnd.dwg</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'png'">
+							<dct:format><dct:IMT rdf:value="image/png" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>image/png</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'xlsx'">
+							<dct:format><dct:IMT rdf:value="application/vnd.ms-excel" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/vnd.ms-excel</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'api'">
+							<dct:format><dct:IMT rdf:value="application/json" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/json</dcat:mediaType>
+						</py:when>
+						<py:when test="rsc_dict.get('format').lower() == 'ttl'">
+							<dct:format><dct:IMT rdf:value="text/turtle" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>text/turtle</dcat:mediaType>
+						</py:when>
+						<py:otherwise>
+							<dct:format><dct:IMT rdf:value="application/octet-stream" rdfs:label="${rsc_dict.get('format')}" /></dct:format><dcat:mediaType>application/octet-stream</dcat:mediaType>
+						</py:otherwise>
+					</py:choose>
 			  </dcat:Distribution>
 			</dcat:distribution>
 			</py:otherwise>
