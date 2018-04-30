@@ -27,6 +27,6 @@ Clone for: https://github.com/ckan/ckanext-dcat.git#egg=ckanext-dcat
 
 8. Put the following lines at the /data/apps/ckan/conf/production.ini:
 
-## Site Settings
+//Site Settings
 ckanext.dcat.datasets_per_page = 1000
 ckanext.dcat.max_datasets = 5000
