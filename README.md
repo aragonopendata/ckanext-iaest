@@ -24,3 +24,9 @@ Clone for: https://github.com/ckan/ckanext-dcat.git#egg=ckanext-dcat
 	ckanext.dcat.rdf.profiles = euro_dcat_ap euro_dcat_ap_iaest 
 
 7. Create user with username harvest
+
+8. Put the following lines at the /data/apps/ckan/conf/production.ini:
+
+## Site Settings
+ckanext.dcat.datasets_per_page = 1000
+ckanext.dcat.max_datasets = 5000
