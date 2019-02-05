@@ -69,6 +69,9 @@ class IAESTPlugin(p.SingletonPlugin, DefaultTranslation):
         _map.connect('federador_rdf', '/federador.rdf',
                      controller=controller, action='federador')
 
+        _map.connect('federador_unizar_rdf', '/federador_unizar.rdf',
+                     controller=controller, action='federador_unizar')
+
        
         return _map
 

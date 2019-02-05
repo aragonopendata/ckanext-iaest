@@ -187,7 +187,6 @@ class RDFParser(RDFProcessor):
             for profile_class in self._profiles:
                 profile = profile_class(self.g, self.compatibility_mode)
                 profile.parse_dataset(dataset_dict, dataset_ref)
-
             yield dataset_dict
 
 

@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 import json
 import uuid
 import logging
@@ -209,7 +211,20 @@ class IAESTRDFHarvester(IAESTHarvester):
             try:
                 for dataset in parser.datasets():
                     if not dataset.get('name'):
-                        dataset['name'] = self._gen_new_name(dataset['title'])
+                        identificador = dataset['title'].encode('utf-8')
+                        #identificador = identificador.encode('utf-8')
+                        log.info('Id: %s' % identificador)
+                        if identificador.startswith("--"):
+                            identificador = identificador.lower().split("--")[1]
+
+                        identificador = identificador.replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o")
+                        identificador = identificador.replace( "ú", "u").replace("%","").replace("ü", "u").replace("Ü", "u")
+                        identificador = identificador.strip().lower().replace(":", "-").replace(")", "").replace(",", "").replace("'","")
+                        identificador = identificador.replace("(","").replace(".", "").replace(" ", "-").replace(">","mayor").replace("<", "menor")
+                        identificador = identificador.replace("--", "-").replace("ñ","ny").replace("Á","a").replace("É","e").replace("Í","i").replace("Ó","o").replace("º","")
+
+                        #dataset['name'] = self._gen_new_name(dataset['title'])
+                        dataset['name'] = identificador
                     log.warning('Generando dataset: {0}'.format(dataset['name']) )
                     # Unless already set by the parser, get the owner organization (if any)
                     # from the harvest source dataset
@@ -267,25 +282,26 @@ class IAESTRDFHarvester(IAESTHarvester):
             log.info('Deleted package {0} with guid {1}'.format(harvest_object.package_id,
                                                                 harvest_object.guid))
             return True
-
+        
         if harvest_object.content is None:
             self._save_object_error('Empty content for object {0}'.format(harvest_object.id),
                                     harvest_object, 'Import')
             return False
-
+        
         try:
             dataset = json.loads(harvest_object.content)
+            
         except ValueError:
             self._save_object_error('Could not parse content for object {0}'.format(harvest_object.id),
                                     harvest_object, 'Import')
             return False
-
+        
         # Get the last harvested object (if any)
         previous_object = model.Session.query(HarvestObject) \
                                        .filter(HarvestObject.guid==harvest_object.guid) \
                                        .filter(HarvestObject.current==True) \
                                        .first()
-
+        
         # Flag previous object as not current anymore
         if previous_object:
             previous_object.current = False
@@ -294,21 +310,24 @@ class IAESTRDFHarvester(IAESTHarvester):
         # Flag this object as the current one
         harvest_object.current = True
         harvest_object.add()
-
+        
         context = {
             'user': self._get_user_name(),
             'return_id_only': True,
             'ignore_auth': True,
         }
-
+        
         # Check if a dataset with the same guid exists
         existing_dataset = self._get_existing_dataset(harvest_object.guid)
-
+        
         try:
             if existing_dataset:
                 # Don't change the dataset name even if the title has
                 dataset['name'] = existing_dataset['name']
                 dataset['id'] = existing_dataset['id']
+
+                # Get the last time the dataset was modified
+                existing_dataset_metadata_modified = existing_dataset['metadata_modified']
 
                 harvester_tmp_dict = {}
 
@@ -328,10 +347,15 @@ class IAESTRDFHarvester(IAESTHarvester):
                         # Save reference to the package on the object
                         harvest_object.package_id = dataset['id']
                         harvest_object.add()
-
-                        p.toolkit.get_action('package_update')(context, dataset)
+                        if dataset['metadata_modified'] > existing_dataset_metadata_modified[:10]:
+                            p.toolkit.get_action('package_update')(context, dataset)
+                        else:
+                            log.info('Ignoring dataset %s' % existing_dataset['name'])
+                            # Save reference for the counter of datasets
+                            return 'unchanged'
                     else:
                         log.info('Ignoring dataset %s' % existing_dataset['name'])
+                        # Save reference for the counter of datasets
                         return 'unchanged'
                 except p.toolkit.ValidationError, e:
                     self._save_object_error('Update validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
@@ -348,7 +372,6 @@ class IAESTRDFHarvester(IAESTHarvester):
 
             else:
                 package_plugin = lib_plugins.lookup_package_plugin(dataset.get('type', None))
-
                 package_schema = package_plugin.create_package_schema()
                 context['schema'] = package_schema
 
@@ -358,7 +381,11 @@ class IAESTRDFHarvester(IAESTHarvester):
 
                 harvester_tmp_dict = {}
 
+                if '/' in dataset['name']:
+                    dataset['name'] = dataset['name'].replace('/', '-')
+                    log.debug('Dataset with character / modified: %s' % dataset['name'])
                 name = dataset['name']
+                log.debug('%s' % harvest_object.guid)
                 for harvester in p.PluginImplementations(IIAESTRDFHarvester):
                     harvester.before_create(harvest_object, dataset, harvester_tmp_dict)
 
@@ -388,7 +415,7 @@ class IAESTRDFHarvester(IAESTHarvester):
                     if err:
                         self._save_object_error('RDFHarvester plugin error: %s' % err, harvest_object, 'Import')
                         return False
-
+                log.debug('%s' % harvest_object.guid)
                 log.info('Created dataset %s' % dataset['name'])
 
         except Exception, e:

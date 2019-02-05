@@ -13,7 +13,8 @@ from ckanext.iaest.processors import RDFSerializer
 
 log = logging.getLogger(__name__)
 
-DATASETS_PER_PAGE = 100
+DATASETS_PER_PAGE = 0
+MAX_DATASETS = 0
 
 wrong_page_exception = toolkit.ValidationError(
     'Page param must be a positive integer starting in 1')
@@ -55,10 +56,31 @@ def iaest_federador(context, data_dict):
     log.debug('Entrando en iaest_federador')
     #toolkit.check_access('iaest_catalog_show', context, data_dict)
 
-    query = _search_ckan_datasets(context, data_dict)
-    dataset_dicts = query['results']
+    dataset_dicts = []
+
+    totalRowMax = int(config.get('ckanext.dcat.max_datasets', MAX_DATASETS))
+    log.debug('Num total datasets: %s',totalRowMax)
+
+    startRow = 0
+    page = 1
+
+    query = _search_ckan_datasets(context, data_dict, page)
+    totalQuery = query['results']
+
+    startRow =  startRow + 1000
+    page = page + 1
+
+    while (startRow < totalRowMax):
+        log.debug('Page number federador: %s', page)
+        query = _search_ckan_datasets(context, data_dict, page)
+        if query['results']:
+            totalQuery = totalQuery + query['results']
+        startRow =  startRow + 1000
+        page = page + 1
+
+    dataset_dicts = totalQuery
     
-    #log.debug('Dataset_dicts: %s',dataset_dicts)
+    log.debug('Dataset_dicts: %s',dataset_dicts)
     return dataset_dicts
 
 @toolkit.side_effect_free
@@ -91,10 +113,10 @@ def iaest_datasets_list(context, data_dict):
             for ckan_dataset in ckan_datasets]
 
 
-def _search_ckan_datasets(context, data_dict):
+def _search_ckan_datasets(context, data_dict, page):
 
     n = int(config.get('ckanext.dcat.datasets_per_page', DATASETS_PER_PAGE))
-    page = data_dict.get('page', 1) or 1
+    #page = data_dict.get('page', 1) or 1
 
     try:
         page = int(page)
@@ -128,7 +150,7 @@ def _search_ckan_datasets(context, data_dict):
     if modified_since:
         search_data_dict['fq_list'].append(
             'metadata_modified:[{0} TO NOW]'.format(modified_since))
-
+    log.debug('search final: %s' % search_data_dict)
     query = toolkit.get_action('package_search')(context, search_data_dict)
 
     return query

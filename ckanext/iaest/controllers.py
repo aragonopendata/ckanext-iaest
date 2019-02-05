@@ -132,5 +132,45 @@ class DCATController(BaseController):
         except toolkit.ValidationError, e:
             toolkit.abort(409, str(e))
 
+    def federador_unizar(self):
+        
+       
+
+        log.debug('Leyendo catalog')
+        data_dict = {
+            'page': toolkit.request.params.get('page'),
+            'modified_since': toolkit.request.params.get('modified_since'),
+            
+        }
+
+       
+        try:
+            log.debug('Obteniendo datasets para el federador')
+            dataset_dict = toolkit.get_action('iaest_federador')({}, data_dict)
+            log.debug('Creando extra_vars')
+            c_data = {'pkg':dataset_dict,'fecha':datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}
+            #log.debug('Creando c %s', c_data)
+            
+            toolkit.response.headers['Content-Type'] = 'application/rdf+xml;charset=UTF-8'
+
+            #Renderizamos la pagina
+
+            loader = TemplateLoader(
+                os.path.join(os.path.dirname(__file__), 'templates'),
+                auto_reload=True
+            )
+
+            tmpl = loader.load('package/federador_unizar.rdf')
+            content = tmpl.generate(c=c_data).render('xml')
+            log.debug('Content Federador: %s', content)
+            toolkit.response.headers['Content-Type'] = 'application/rdf+xml;charset=UTF-8'
+            toolkit.response.headers['Content-Length'] = len(content)
+            return content
+
+
+
+        except toolkit.ValidationError, e:
+            toolkit.abort(409, str(e))
+
 
 

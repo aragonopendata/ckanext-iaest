@@ -671,6 +671,14 @@ class EuropeanDCATAPProfile(RDFProfile):
             if value:
                 dataset_dict[key] = value
 
+        # Last time dataset was modified
+        log.debug("Parsing last time dataset modified")
+        rdf_modified = self._object_value(dataset_ref, DCT.modified)
+
+        # Convert these strings to two dates comparable, yyyy-mm-dd (10 characters)
+        dataset_dict['metadata_modified'] = rdf_modified[:10]
+        log.debug("Modified date in RDF: %s" % dataset_dict['metadata_modified'])
+        
         # Publisher
         log.debug('Parsing publisher')
         publisher = self._publisher(dataset_ref, DCT.publisher)
@@ -829,7 +837,6 @@ class EuropeanDCATAPProfile(RDFProfile):
                 if extra['key'] == 'language':
                     extra['value'] = ','.join(
                         sorted(json.loads(extra['value'])))
-
         return dataset_dict
 
     def graph_from_dataset(self, dataset_dict, dataset_ref):

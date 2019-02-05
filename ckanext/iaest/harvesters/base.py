@@ -37,7 +37,6 @@ class IAESTHarvester (HarvesterBase):
         :param content_type: will be returned as type
         :return: a tuple containing the content and content-type
         '''
-
         if not url.lower().startswith('http'):
             # Check local file
             if os.path.exists(url):
