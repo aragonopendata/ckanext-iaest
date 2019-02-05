@@ -55,7 +55,7 @@ def iaest_catalog_show(context, data_dict):
 def iaest_federador(context, data_dict):
     log.debug('Entrando en iaest_federador')
     #toolkit.check_access('iaest_catalog_show', context, data_dict)
-
+    
     dataset_dicts = []
 
     totalRowMax = int(config.get('ckanext.dcat.max_datasets', MAX_DATASETS))
@@ -140,12 +140,12 @@ def _search_ckan_datasets(context, data_dict, page):
     }
 
     search_data_dict['q'] = data_dict.get('q', '*:*')
-    search_data_dict['fq'] = data_dict.get('fq')
-    search_data_dict['fq_list'] = []
+    #search_data_dict['fq'] = data_dict.get('fq')
+    #search_data_dict['fq_list'] = []
 
     # Exclude certain dataset types
-    search_data_dict['fq_list'].append('-dataset_type:harvest')
-    search_data_dict['fq_list'].append('-dataset_type:showcase')
+    #search_data_dict['fq_list'].append('-dataset_type:harvest')
+    #search_data_dict['fq_list'].append('-dataset_type:showcase')
 
     if modified_since:
         search_data_dict['fq_list'].append(
