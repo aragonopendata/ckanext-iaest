@@ -700,6 +700,8 @@ class EuropeanDCATAPProfile(RDFProfile):
         log.debug('Obteniendo Extras')
         for key, predicate in (
                 ('01_IAEST_Tema estadistico', DCAT.tema_estadistico),
+                ('02_IAEST_Unidad Estadistica', DCAT.unidad_estadistica),
+                ('03_IAEST_Poblacion estadistica', DCAT.poblacion_estadistica),
                 ('04_IAEST_Unidad de medida', DCAT.unidad_medida),
                 ('06_IAEST_Periodo base', DCAT.periodo_base),
                 ('07_IAEST_Tipo de operacion', DCAT.tipo_operacion),
@@ -709,7 +711,7 @@ class EuropeanDCATAPProfile(RDFProfile):
                 ('5_IAEST_Legislacion UE', DCAT.legislacion_ue),                
                 ('Data Dictionary URL0',DCAT.urlDictionary),                
                 ('Granularity',DCAT.granularity),
-                ('LangES',DCAT.language),                
+                ('LangES',DCT.language),                
                 ('Spatial',DCT.spatial),
                 ('TemporalFrom',DCT.temporalFrom),
                 ('TemporalUntil',DCT.temporalUntil),
