@@ -719,7 +719,7 @@ class EuropeanDCATAPProfile(RDFProfile):
                 ('shortUriAragopedia',DCAT.short_uri_aragopedia),
                 ('typeAragopedia',DCAT.type_aragopedia),
                 ('uriAragopedia',DCAT.uri_aragopedia),
-                ('iaest_modified',DCT.modified),      
+                ('iaest_modified',DCT.modified),
                 ):
             value = self._object_value(dataset_ref, predicate)
             log.debug(' Key: %s Value:%s',key,value)
