@@ -864,7 +864,7 @@ class EuropeanDCATAPProfile(RDFProfile):
         #Insertamos los grupos
         #TODO En el RDF original se anade un rdf:resource
         for group in dataset_dict.get('groups'):
-             g.add((dataset_ref, DCAT.theme, Literal(group['display_name'])))
+            g.add((dataset_ref, DCAT.theme, URIRef('http://datos.gob.es/kos/sector-publico/sector/'+group['name'])))
         
         # Tags
         for tag in dataset_dict.get('tags', []):
