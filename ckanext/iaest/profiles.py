@@ -903,16 +903,16 @@ class EuropeanDCATAPProfile(RDFProfile):
 
         #Spatial
         #TODO Revisar los namespaces
-        spatial = BNode()
+        #spatial = BNode()
         
-        spatial_title = 'aragon'
-        spatial_comunidad = 'aragon2'
-        spatial_url = 'http://opendata.aragon.es/recurso/territorio/ComunidadAutonoma/Aragon?api_key=e103dc13eb276ad734e680f5855f20c6'
+        #spatial_title = 'aragon'
+        #spatial_comunidad = 'aragon2'
+        #spatial_url = 'http://opendata.aragon.es/recurso/territorio/ComunidadAutonoma/Aragon?api_key=e103dc13eb276ad734e680f5855f20c6'
 
-        g.add((spatial, DCT.title, Literal(spatial_title,lang='es')))
-        g.add((spatial, ARAGODEF.ComunidadAutonoma, Literal(spatial_comunidad,lang='es')))
-        g.add((spatial, RDF.resource, Literal(spatial_url)))
-        g.add((dataset_ref, DCT.spatial, spatial))
+        #g.add((spatial, DCT.title, Literal(spatial_title,lang='es')))
+        #g.add((spatial, ARAGODEF.ComunidadAutonoma, Literal(spatial_comunidad,lang='es')))
+        #g.add((spatial, RDF.resource, Literal(spatial_url)))
+        g.add((dataset_ref, DCT.spatial, URIRef("http://opendata.aragon.es/recurso/sector-publico/organizacion/comunidad/2")))
 
         #Temporal
         #TODO Introduce nodos Description y no utiliza los prefijos para los namespaces custom
@@ -967,47 +967,47 @@ class EuropeanDCATAPProfile(RDFProfile):
         
 
         # Resources
-        for resource_dict in dataset_dict.get('resources', []):
+  #      for resource_dict in dataset_dict.get('resources', []):
 
-            distribution = URIRef(resource_uri(resource_dict))
+  #          distribution = URIRef(resource_uri(resource_dict))
 
-            g.add((dataset_ref, DCAT.Distribution, distribution))
+  #          g.add((dataset_ref, DCAT.Distribution, distribution))
 
             #Identifier
-            identifier = resource_uri(resource_dict)
-            g.add((distribution, DCT.identifier, Literal(identifier,datatype='http://www.w3.org/2001/XMLSchema#anyURI')))
+  #          identifier = resource_uri(resource_dict)
+  #          g.add((distribution, DCT.identifier, Literal(identifier,datatype='http://www.w3.org/2001/XMLSchema#anyURI')))
 
             #title
-            title = resource_dict.get('name')
-            g.add((distribution, DCT.title, Literal(title,lang='es')))
+  #          title = resource_dict.get('name')
+  #          g.add((distribution, DCT.title, Literal(title,lang='es')))
 
             #Description
-            description = resource_dict.get('description')
-            g.add((distribution, DCT.description, Literal(description,lang='es')))
+  #          description = resource_dict.get('description')
+  #          g.add((distribution, DCT.description, Literal(description,lang='es')))
 
             #accessUrl
              # URL
-            url = resource_dict.get('url')
-            download_url = resource_dict.get('download_url')
-            if download_url:
-                g.add((distribution, DCAT.downloadURL, Literal(download_url,datatype='http://www.w3.org/2001/XMLSchema#anyURI')))
-            if (url and not download_url) or (url and url != download_url):
-                g.add((distribution, DCAT.accessURL, Literal(url,datatype='http://www.w3.org/2001/XMLSchema#anyURI')))
+  #          url = resource_dict.get('url')
+  #          download_url = resource_dict.get('download_url')
+  #          if download_url:
+  #              g.add((distribution, DCAT.downloadURL, Literal(download_url,datatype='http://www.w3.org/2001/XMLSchema#anyURI')))
+  #          if (url and not download_url) or (url and url != download_url):
+  #              g.add((distribution, DCAT.accessURL, Literal(url,datatype='http://www.w3.org/2001/XMLSchema#anyURI')))
 
             #format
-            format_res = resource_dict.get('format')
+  #          format_res = resource_dict.get('format')
             #TODO En el importador nos se esta rellenando el mimetype_inner
-            mimetype_inner_res = resource_dict.get('mimetype_inner')
-            if format_res:
+  #          mimetype_inner_res = resource_dict.get('mimetype_inner')
+  #          if format_res:
 
-                format_extent = BNode()
-                mediatype_extent = BNode()
+  #              format_extent = BNode()
+  #              mediatype_extent = BNode()
 
-                g.add((mediatype_extent, RDFS.value, Literal(mimetype_inner_res)))
-                g.add((mediatype_extent, RDFS.label, Literal(format_res)))
+  #              g.add((mediatype_extent, RDFS.value, Literal(mimetype_inner_res)))
+  #              g.add((mediatype_extent, RDFS.label, Literal(format_res)))
 
-                g.add((format_extent, DCT.MediaType, mediatype_extent))
-                g.add((distribution, DCT['format'], format_extent))
+  #              g.add((format_extent, DCT.MediaType, mediatype_extent))
+  #              g.add((distribution, DCT['format'], format_extent))
                 
 
         
